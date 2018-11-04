@@ -32,3 +32,15 @@ type Block struct {
 }
 
 var Blockchain []Block
+
+// this calculateHash function concatenates Index, Timestamp, BPM,
+// prevHash of the block provided as argument and returns the sha256
+// hash as string
+
+func calculateHash(block Block) string {
+  record := string(block.Index) + block.Timestamp + string(block.BPM) + block.Prevhash
+  h := sha256.New()
+  h.write([]byte(record))
+  hashed := h.Sum(nil)
+  return hex.EncodeToString(hashed)
+}
