@@ -80,3 +80,12 @@ func isBlockValid(newBlock, oldBlock Block) bool {
 
   return true
 }
+
+// this function compares the length of chains to
+// find the longest and therefore more trustworthy
+
+func replaceChain(newBlocks []Block) {
+  if len(newBlocks) > len(Blockchain) {
+    Blockchain = newBlocks
+  }
+}
