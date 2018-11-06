@@ -38,9 +38,9 @@ var Blockchain []Block
 // hash as string
 
 func calculateHash(block Block) string {
-  record := string(block.Index) + block.Timestamp + string(block.BPM) + block.Prevhash
+  record := string(block.Index) + block.Timestamp + string(block.BPM) + block.PrevHash
   h := sha256.New()
-  h.write([]byte(record))
+  h.Write([]byte(record))
   hashed := h.Sum(nil)
   return hex.EncodeToString(hashed)
 }
@@ -49,7 +49,7 @@ func calculateHash(block Block) string {
 
 func generateBlock(oldBlock Block, BPM int) (Block, error) {
 
-  var newBlock Blockchain
+  var newBlock Block
   t := time.Now()
 
   newBlock.Index = oldBlock.Index + 1
@@ -75,7 +75,7 @@ func isBlockValid(newBlock, oldBlock Block) bool {
   }
 
   if calculateHash(newBlock) != newBlock.Hash {
-    return fasle
+    return false
   }
 
   return true
@@ -124,7 +124,7 @@ func makeMuxRouter() http.Handler {
 // GET function
 
 func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
-  bytes, err := json.MarshallIndent(Blockchain, "", " ")
+  bytes, err := json.MarshalIndent(Blockchain, "", " ")
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
@@ -153,7 +153,7 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
   var m Message
 
   decoder := json.NewDecoder(r.Body)
-  if err := decoder.Decode(%m); err != nil {
+  if err := decoder.Decode(&m); err != nil {
     respondWithJSON(w, r, http.StatusBadRequest, r.Body)
     return
   }
@@ -179,7 +179,7 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 // alerting function to alert if POST request are successful or // NOTE:
 
 func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload interface{}) {
-  response, err := json.MarshallIndent(payload, "", " ")
+  response, err := json.MarshalIndent(payload, "", " ")
   if err != nil {
     w.WriteHeader(http.StatusInternalServerError)
     w.Write([]byte("HTTP 500: Internal Server Error"))
