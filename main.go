@@ -135,10 +135,19 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 
 
 // POST construct
+// format will look like:
+// {"BPM": 40}
 
-type message struct {
+type Message struct {
   BPM int
 }
+
+// function to handle writing a new block to the chain
+// first it will decode the request body into the
+// var m Message variable of type Message
+// then a new block is created by passing the orevious block and the
+// new pulse to the generateBlock function
+// validation is then done on the new block to make sure it is valid
 
 func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
   var m Message
