@@ -190,7 +190,8 @@ func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload i
   w.Write(response)
 }
 
-// main function
+// main function and genesis block creation
+
 
 func main() {
   err := godotenv.Load()
